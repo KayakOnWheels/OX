@@ -1,4 +1,4 @@
-package com.ox.IOController;
+package com.ox.ioController;
 
 import com.ox.logic.Rules;
 
@@ -33,7 +33,7 @@ public class OutputController {
                 *Board numbers
                 
                 ↓→y 1   2   3
-                x     
+                x
                 1   11  12  13
                 2   21  22  23
                 3   31  32  33
@@ -68,6 +68,10 @@ public class OutputController {
     public static void humanOrComputer() {
         System.out.println("Do you want to play with computer or human?");
         System.out.println("y - computer      n - human");
+    }
+
+    public static void enterAgain() {
+        System.out.println("Bad command! Enter again.");
     }
 
 

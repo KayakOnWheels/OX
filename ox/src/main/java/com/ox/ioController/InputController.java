@@ -1,25 +1,39 @@
-package com.ox.IOController;
+package com.ox.ioController;
 
 import com.ox.logic.Rules;
 
 import java.util.Scanner;
 
-import static com.ox.IOController.OutputController.*;
+import static com.ox.ioController.OutputController.*;
 import static com.ox.logic.OxRunner.*;
 
 public class InputController {
 
-    public static String getInput() {
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine();
+    private static final Scanner scanner = new Scanner(System.in);
+
+    public static String getInputInGame() {
+        String input = scanner.nextLine();
+        boolean correctValue = false;
+        while(!correctValue) {
+            correctValue = "m".equals(input) || input != null && input.matches("[1-"+ Rules.getBoardSizeX() +
+                    "][1-" + Rules.getBoardSizeY() + "]");
+            if(!correctValue) {
+                OutputController.enterAgain();
+                input = scanner.nextLine();
+            }
+        }
+        return input;
     }
 
+    public static String getInput() {
+        return scanner.nextLine();
+    }
     public static boolean makeChoice() {
         String input = getInput();
 
-        if(input.equals("y")) {
+        if("y".equals(input)) {
             return true;
-        } else if(input.equals("n")) {
+        } else if("n".equals(input)) {
             return false;
         }
         else return false;
@@ -30,14 +44,7 @@ public class InputController {
         String input = getInput();
 
         switch (input) {
-            case "n" -> {
-                confirmNewGame();
-                if (makeChoice()) {
-                    startGame();
-                } else {
-                    enterMenu();
-                }
-            }
+            case "n" -> makeChoiceInMenu();
             case "x" -> endGame();
             case "r" -> {
                 if (!Rules.isGameInProgress()) {
@@ -59,6 +66,14 @@ public class InputController {
         }
     }
 
+    public static void makeChoiceInMenu() {
+        confirmNewGame();
+        if (makeChoice()) {
+            startGame();
+        } else {
+            enterMenu();
+        }
+    }
 
 
 }

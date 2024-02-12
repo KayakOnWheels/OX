@@ -1,24 +1,17 @@
 package com.ox.logic;
 
-import com.ox.IOController.InputController;
+import com.ox.ioController.InputController;
 import com.ox.actors.ComputerPlayer;
 import com.ox.actors.HumanPlayer;
 import com.ox.actors.Player;
 
-import static com.ox.IOController.InputController.*;
-import static com.ox.IOController.OutputController.*;
+import static com.ox.ioController.InputController.*;
+import static com.ox.ioController.OutputController.*;
 import static com.ox.logic.Rules.*;
 
 public class OxRunner {
     private static Player player1;
     private static Player player2;
-
-    public static Player getPlayer1() {
-        return player1;
-    }
-    public static Player getPlayer2() {
-        return player2;
-    }
 
 
     public static void startGame() {
@@ -81,8 +74,13 @@ public class OxRunner {
 
     public static void finishGame(Player p, byte gameStatus) {
         setGameInProgress(false);
-        System.out.println("Game finished! " + p.getName() + " won");
-        enterMenu();
+        if(gameStatus == 1) {
+            System.out.println("Game finished! " + p.getName() + " won");
+            enterMenu();
+        } else {
+            System.out.println("Game finished! No winner");
+            enterMenu();
+        }
     }
 
 }

@@ -68,15 +68,6 @@ public class Rules {
         }
     }
 
-    public static void validateInput(String input) throws Exception {
-        int n = Integer.parseInt(input);
-        if(!input.equals("m")) {
-            if (n > (Integer.parseInt(boardSizeX + String.valueOf(boardSizeY))) || n < 11) {
-                throw new Exception();
-            }
-        }
-    }
-
     public static byte gameStatus() {
         int strike = 0;
 
@@ -108,10 +99,11 @@ public class Rules {
                     }
                 }
             }
-        } //looks for diagonal strike(left-right)
-        for (int xi = 0; xi < board[0].length; xi++) {
-                if(!board[xi][xi].equals(' ')) {
-                    if (board[xi][xi].equals(board[xi + 1][xi + 1])) {
+        }//looks for diagonal strike(left-right)
+        for (int yi = board[0].length-1; yi > 0; yi--) {
+            for (int xi = board.length - 1; xi > 0; xi--) {
+                if (!board[xi][yi].equals(' ')) {
+                    if (board[xi][yi].equals(board[xi - 1][yi - 1])) {
                         strike++;
                         if (strike == inRowToWin-1) {
                             return 1; //game finished - player won
@@ -120,6 +112,7 @@ public class Rules {
                         strike = 0;
                     }
                 }
+            }
         }//looks for diagonal strike(right-left)
         for (int yi = 0; yi < board[0].length-1; yi++) {
             for (int xi = board.length - 1; xi > 0; xi--) {

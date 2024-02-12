@@ -3,7 +3,7 @@ package com.ox;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import static com.ox.IOController.InputController.enterMenu;
+import static com.ox.ioController.InputController.enterMenu;
 
 @SpringBootApplication
 public class OxApplication {
@@ -14,5 +14,4 @@ public class OxApplication {
         enterMenu();
 
     }
-
 }
