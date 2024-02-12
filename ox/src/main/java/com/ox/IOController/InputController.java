@@ -1,8 +1,6 @@
 package com.ox.IOController;
 
-import com.ox.actors.ComputerPlayer;
-import com.ox.actors.Player;
-import com.ox.logic.OxRunner;
+import com.ox.logic.Rules;
 
 import java.util.Scanner;
 
@@ -42,7 +40,7 @@ public class InputController {
             }
             case "x" -> endGame();
             case "r" -> {
-                if (getPlayer1() == null) {
+                if (!Rules.isGameInProgress()) {
                     System.out.println("No game to resume!");
                     enterMenu();
                 } else {

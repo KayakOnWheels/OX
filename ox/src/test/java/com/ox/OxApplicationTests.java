@@ -1,6 +1,7 @@
 package com.ox;
 
 import com.ox.IOController.OutputController;
+import com.ox.actors.HumanPlayer;
 import com.ox.actors.Player;
 import com.ox.logic.Rules;
 import org.junit.jupiter.api.Assertions;
@@ -105,5 +106,16 @@ class OxApplicationTests {
         OutputController.printGameBoard();
         Assertions.assertEquals(0, result);
     }
+
+    @Test
+    void validateInputShouldNotThrowExceptionWhenInputIsM() {
+        //Given
+        String input = "m";
+
+        //When
+        //Then
+        Assertions.assertThrows(Exception.class, ()-> validateInput(input));
+    }
+
 
 }

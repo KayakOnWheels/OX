@@ -27,8 +27,9 @@ public abstract class Player {
     }
 
     public void setPlayerSymbol(Character playerSymbol) {
-        this.playerSymbol = playerSymbol;
+        this.playerSymbol = Character.toUpperCase(playerSymbol);
     }
+
 
     public abstract void makeMove();
 }

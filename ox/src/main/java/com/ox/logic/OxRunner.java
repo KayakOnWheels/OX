@@ -23,6 +23,7 @@ public class OxRunner {
 
     public static void startGame() {
 
+        setGameInProgress(true);
         System.out.print("What's your name? ");
         player1 = new HumanPlayer(InputController.getInput());
         System.out.print("What's your symbol? ");
@@ -58,7 +59,7 @@ public class OxRunner {
                 finishGame(player1, gameStatus);
             }
 
-            System.out.print("Opponent's move");
+            System.out.println("Opponent's move");
             player2.makeMove();
             printGameBoard();
             gameStatus = gameStatus();
@@ -79,6 +80,7 @@ public class OxRunner {
     }
 
     public static void finishGame(Player p, byte gameStatus) {
+        setGameInProgress(false);
         System.out.println("Game finished! " + p.getName() + " won");
         enterMenu();
     }

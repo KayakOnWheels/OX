@@ -1,9 +1,6 @@
 package com.ox.IOController;
 
-import com.ox.actors.Player;
 import com.ox.logic.Rules;
-
-import java.util.List;
 
 
 public class OutputController {

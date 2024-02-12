@@ -1,21 +1,35 @@
 package com.ox.logic;
 
 import com.ox.actors.Player;
-import com.ox.logic.OxRunner;
-
-import java.util.List;
 
 public class Rules {
     //private static List<Character> moves;
     //private static List<List<Character>> moves;
     private static Character[][] board;
 
-    private static int boardSizeX = 4;
-    private static int boardSizeY = 4;
+    private static int boardSizeX = 3;
+    private static int boardSizeY = 3;
     private static int inRowToWin = 3;
+    private static boolean gameInProgress = false;
+
+    public static boolean isGameInProgress() {
+        return gameInProgress;
+    }
+
+    public static void setGameInProgress(boolean gameInProgress) {
+        Rules.gameInProgress = gameInProgress;
+    }
+
+    public static int getBoardSizeX() {
+        return boardSizeX;
+    }
 
     public static void setBoardSizeX(int boardSizeX) {
         Rules.boardSizeX = boardSizeX;
+    }
+
+    public static int getBoardSizeY() {
+        return boardSizeY;
     }
 
     public static void setBoardSizeY(int boardSizeY) {
@@ -45,16 +59,21 @@ public class Rules {
         }
     }
 
-    public static void addMoveToBoard(String s, Player p) {
+    public static void addMoveToBoard(String s, Player p) throws Exception {
         int move = Integer.parseInt(s);
-        board[move / 10 - 1][move % 10 - 1] = p.getPlayerSymbol();
-    }
-
-    public static String validateMove(String input) throws Exception {
-        if (Integer.parseInt(input) <= (Integer.parseInt(String.valueOf(boardSizeX) + String.valueOf(boardSizeY))) || input.equals("m")) {
-            return input;
+        if(board[move / 10 - 1][move % 10 - 1].equals(' ')) {
+            board[move / 10 - 1][move % 10 - 1] = p.getPlayerSymbol();
         } else {
             throw new Exception();
+        }
+    }
+
+    public static void validateInput(String input) throws Exception {
+        int n = Integer.parseInt(input);
+        if(!input.equals("m")) {
+            if (n > (Integer.parseInt(boardSizeX + String.valueOf(boardSizeY))) || n < 11) {
+                throw new Exception();
+            }
         }
     }
 
