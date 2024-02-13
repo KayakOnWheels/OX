@@ -1,5 +1,8 @@
 package com.ox;
 
+import com.ox.actors.HumanPlayer;
+import com.ox.actors.Player;
+import com.ox.ioController.InputController;
 import com.ox.ioController.OutputController;
 import com.ox.logic.Rules;
 import jdk.jfr.Description;
@@ -113,6 +116,22 @@ class OxApplicationTests {
         Assertions.assertTrue(result);
     }
 
+    @Test
+    void addMoveToBoardShouldThrowErrorWhenFieldOccupied() {
+        //Given
+        setBoardSizeX(4);
+        setBoardSizeY(4);
+        setInRowToWin(4);
+        generateBoard(' ');
+        Rules.getBoard()[1][3] = 'x';
+        OutputController.printGameBoard();
+        Player player1 = new HumanPlayer("player");
+
+        //When
+
+        //Then
+        Assertions.assertThrows(Exception.class, () -> addMoveToBoard("24", player1));
+    }
 
 
 }
