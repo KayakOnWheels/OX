@@ -33,7 +33,7 @@ public class OxRunner {
             player2.setPlayerSymbol(getInput().charAt(0));
         }
 
-        generateBoard();
+        generateBoard(' ');
         printGameGuide();
         printGameBoard();
         processGame();

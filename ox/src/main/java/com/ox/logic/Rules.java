@@ -11,6 +11,7 @@ public class Rules {
     private static int boardSizeY = 3;
     private static int inRowToWin = 3;
     private static boolean gameInProgress = false;
+    private static int strike = 0;
 
     public static boolean isGameInProgress() {
         return gameInProgress;
@@ -37,7 +38,7 @@ public class Rules {
     }
 
     public static void setInRowToWin(int inRowToWin) {
-        if(boardSizeY >= inRowToWin && boardSizeX >= inRowToWin) {
+        if (boardSizeY >= inRowToWin && boardSizeX >= inRowToWin) {
             Rules.inRowToWin = inRowToWin;
         }
     }
@@ -50,18 +51,18 @@ public class Rules {
         return board;
     }
 
-    public static void generateBoard() {
+    public static void generateBoard(Character character) {
         board = new Character[boardSizeX][boardSizeY];
         for (int xi = 0; xi < boardSizeX; xi++) {
             for (int yi = 0; yi < boardSizeY; yi++) {
-                board[xi][yi] = ' ';
+                board[xi][yi] = character;
             }
         }
     }
 
     public static void addMoveToBoard(String s, Player p) throws Exception {
         int move = Integer.parseInt(s);
-        if(board[move / 10 - 1][move % 10 - 1].equals(' ')) {
+        if (board[move / 10 - 1][move % 10 - 1].equals(' ')) {
             board[move / 10 - 1][move % 10 - 1] = p.getPlayerSymbol();
         } else {
             throw new Exception();
@@ -69,72 +70,105 @@ public class Rules {
     }
 
     public static byte gameStatus() {
-        int strike = 0;
+        if(isVerticalStrike() || isHorizontalStrike() || isDiagonalStrikeLeftRight() || isDiagonalStrikeRightLeft()) {
+            return 1;
+        } else if(isBoardFull()) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
 
-         //looks for vertical strike
+    public static boolean isVerticalStrike() {
+        //looks for vertical strike
+        strike = 0;
         for (int yi = 0; yi < board[0].length; yi++) {
             for (int xi = 0; xi < board.length - 1; xi++) {
-                if(!board[xi][yi].equals(' ')) {
+                if (!board[xi][yi].equals(' ')) {
                     if (board[xi][yi].equals(board[xi + 1][yi])) {
                         strike++;
-                        if (strike == inRowToWin-1) {
-                            return 1; //game finished - player won
+                        if (strike == inRowToWin - 1) {
+                            return true; //game finished - player won
                         }
                     } else {
-                        strike =  0;
+                        strike = 0;
                     }
                 }
             }
-        }//looks for horizontal strike
-        for(int xi = 0; xi < board.length; xi++) {
+        }
+        return false;
+    }
+
+    public static boolean isHorizontalStrike() {
+        //looks for horizontal strike
+        strike = 0;
+        for (int xi = 0; xi < board.length; xi++) {
             for (int yi = 0; yi < board[0].length - 1; yi++) {
                 if (!board[xi][yi].equals(' ')) {
                     if (board[xi][yi].equals(board[xi][yi + 1])) {
                         strike++;
-                        if (strike == inRowToWin-1) {
-                            return 1; //game finished - player won
+                        if (strike == inRowToWin - 1) {
+                            return true; //game finished - player won
                         }
                     } else {
-                        strike =  0;
+                        strike = 0;
                     }
                 }
             }
-        }//looks for diagonal strike(left-right)
-        for (int yi = board[0].length-1; yi > 0; yi--) {
+        }
+        return false;
+    }
+
+    public static boolean isDiagonalStrikeLeftRight() {
+        //looks for diagonal strike(left-right)
+        strike = 0;
+        for (int yi = board[0].length - 1; yi > 0; yi--) {
             for (int xi = board.length - 1; xi > 0; xi--) {
                 if (!board[xi][yi].equals(' ')) {
                     if (board[xi][yi].equals(board[xi - 1][yi - 1])) {
                         strike++;
-                        if (strike == inRowToWin-1) {
-                            return 1; //game finished - player won
+                        if (strike == inRowToWin - 1) {
+                            return true; //game finished - player won
                         }
                     } else {
                         strike = 0;
                     }
                 }
             }
-        }//looks for diagonal strike(right-left)
-        for (int yi = 0; yi < board[0].length-1; yi++) {
+        }
+        return false;
+    }
+
+    public static boolean isDiagonalStrikeRightLeft() {
+        //looks for diagonal strike(right-left)
+        strike = 0;
+        for (int yi = 0; yi < board[0].length - 1; yi++) {
             for (int xi = board.length - 1; xi > 0; xi--) {
                 if (!board[xi][yi].equals(' ')) {
                     if (board[xi][yi].equals(board[xi - 1][yi + 1])) {
                         strike++;
-                        if (strike == inRowToWin-1) {
-                            return 1; //game finished - player won
+                        if (strike == inRowToWin - 1) {
+                            return true; //game finished - player won
                         }
                     } else {
                         strike = 0;
                     }
                 }
             }
-        }//looks if board is full
+        }
+        return false;
+    }
+
+    public static boolean isBoardFull() {
+        //looks if board is full
+        strike = 0;
         for (int xi = 0; xi < board.length; xi++) {
             for (int yi = 0; yi < board[xi].length; yi++) {
                 if (board[xi][yi].equals(' ')) {
-                    return 0;
+                    return false;
                 }
             }
         }
-            return -1; //game finished - board is full
+        return true; //game finished - board is full
     }
 }

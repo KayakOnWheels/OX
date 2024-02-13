@@ -2,6 +2,7 @@ package com.ox;
 
 import com.ox.ioController.OutputController;
 import com.ox.logic.Rules;
+import jdk.jfr.Description;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,107 +13,106 @@ import static com.ox.logic.Rules.*;
 class OxApplicationTests {
 
     @Test
-    void gameStatusShouldReturn1WhenUserWonCase1() {
+    void gameStatusShouldReturn1WhenDiagonalStrikeFromRightToLeft() {
         //Given
         setBoardSizeX(4);
         setBoardSizeY(4);
         setInRowToWin(4);
-        generateBoard();
+        generateBoard(' ');
         Rules.getBoard()[0][3] = 'x';
         Rules.getBoard()[1][2] = 'x';
         Rules.getBoard()[2][1] = 'x';
         Rules.getBoard()[3][0] = 'x';
+        OutputController.printGameBoard();
 
         //When
         int result = gameStatus();
+        boolean result2 = isDiagonalStrikeRightLeft();
 
         //Then
-        OutputController.printGameBoard();
         Assertions.assertEquals(1, result);
+        Assertions.assertTrue(result2);
     }
 
     @Test
-    void gameStatusShouldReturn1WhenUserWonCase2() {
+    void gameStatusShouldReturn1WhenDiagonalStrikeFromLeftToRight() {
         //Given
         setBoardSizeX(4);
         setBoardSizeY(4);
         setInRowToWin(3);
-        generateBoard();
+        generateBoard(' ');
         Rules.getBoard()[0][0] = 'x';
         Rules.getBoard()[1][1] = 'x';
         Rules.getBoard()[2][2] = 'x';
+        OutputController.printGameBoard();
 
         //When
         int result = gameStatus();
+        boolean result2 = isDiagonalStrikeLeftRight();
 
         //Then
-        OutputController.printGameBoard();
         Assertions.assertEquals(1, result);
+        Assertions.assertTrue(result2);
     }
 
     @Test
-    void gameStatusShouldReturn1WhenUserWonCase3() {
+    void gameStatusShouldReturn1WhenHorizontalStrike() {
         //Given
         setBoardSizeX(4);
         setBoardSizeY(4);
         setInRowToWin(3);
-        generateBoard();
+        generateBoard(' ');
         Rules.getBoard()[2][0] = 'x';
         Rules.getBoard()[2][1] = 'x';
         Rules.getBoard()[2][2] = 'x';
         Rules.getBoard()[1][3] = 'x';
+        OutputController.printGameBoard();
 
         //When
         int result = gameStatus();
+        boolean result2 = isHorizontalStrike();
 
         //Then
-        OutputController.printGameBoard();
         Assertions.assertEquals(1, result);
+        Assertions.assertTrue(result2);
     }
 
     @Test
-    void gameStatusShouldReturn1WhenUserWonCase4() {
+    void gameStatusShouldReturn1WhenVerticalStrike() {
         //Given
         setBoardSizeX(4);
         setBoardSizeY(4);
         setInRowToWin(4);
-        generateBoard();
+        generateBoard(' ');
         Rules.getBoard()[1][3] = 'x';
         Rules.getBoard()[2][3] = 'x';
         Rules.getBoard()[3][3] = 'x';
         Rules.getBoard()[0][3] = 'x';
-
+        OutputController.printGameBoard();
 
         //When
         int result = gameStatus();
+        boolean result2 = isVerticalStrike();
 
         //Then
-        OutputController.printGameBoard();
         Assertions.assertEquals(1, result);
+        Assertions.assertTrue(result2);
     }
 
     @Test
     void gameStatusShouldReturnMinus1WhenNoMoreFieldsToPlay() {
         //Given
-        generateBoard(); //empty board
-
-        //When
-        int result = gameStatus();
-
-        //Then
+        generateBoard('x'); //empty board
         OutputController.printGameBoard();
-        Assertions.assertEquals(0, result);
-    }
-
-    @Test
-    void validateInputShouldNotThrowExceptionWhenInputIsM() {
-        //Given
-        String input = "m";
 
         //When
+        boolean result = isBoardFull();
+
         //Then
-        //Assertions.assertThrows(Exception.class, ()-> validateInput(input));
+
+        Assertions.assertTrue(result);
     }
+
 
 
 }
