@@ -44,16 +44,9 @@ public class InputController {
         String input = getInput();
 
         switch (input) {
-            case "n" -> makeChoiceInMenu();
+            case "n" -> ifNewGame();
             case "x" -> endGame();
-            case "r" -> {
-                if (!Rules.isGameInProgress()) {
-                    System.out.println("No game to resume!");
-                    enterMenu();
-                } else {
-                    processGame();
-                }
-            }
+            case "r" -> ifResumeGame();
             case "s" -> {
                 printStatistics();
                 enterMenu();
@@ -66,12 +59,21 @@ public class InputController {
         }
     }
 
-    public static void makeChoiceInMenu() {
+    public static void ifNewGame() {
         confirmNewGame();
         if (makeChoice()) {
             startGame();
         } else {
             enterMenu();
+        }
+    }
+
+    public static void ifResumeGame() {
+        if (!Rules.isGameInProgress()) {
+            noGameToResume();
+            enterMenu();
+        } else {
+            processGame();
         }
     }
 

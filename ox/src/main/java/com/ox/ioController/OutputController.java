@@ -1,5 +1,6 @@
 package com.ox.ioController;
 
+import com.ox.actors.Player;
 import com.ox.logic.Rules;
 
 
@@ -74,5 +75,44 @@ public class OutputController {
         System.out.println("Bad command! Enter again.");
     }
 
+    public static void whatsYourName() {
+        System.out.println("What's your name? ");
+    }
+
+    public static void whatsYourSymbol() {
+        System.out.print("What's your symbol? ");
+    }
+
+    public static void whatsTheNameOfTheSecondPlayer() {
+        System.out.println("What's the name of second player?");
+    }
+
+    public static void whatsTheSymbolOfThisPlayer() {
+        System.out.print("And his symbol? ");
+    }
+
+    public static void yourMove() {
+        System.out.print("Your Move ");
+    }
+
+    public static void opponentsMove() {
+        System.out.println("Opponent's move ");
+    }
+
+    public static void gameFinishedWithWinner(Player p) {
+        System.out.println("Game finished! " + p.getName() + " won");
+    }
+
+    public static void gameFinishedWithoutWinner() {
+        System.out.println("Game finished! No winner");
+    }
+
+    public static void noGameToResume() {
+        System.out.println("No game to resume!");
+    }
+
+    public static void thisFieldIsOccupied() {
+        System.out.println("This field is occupied! Choose another.");
+    }
 
 }

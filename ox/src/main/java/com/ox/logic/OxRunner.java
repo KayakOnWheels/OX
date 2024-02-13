@@ -17,9 +17,9 @@ public class OxRunner {
     public static void startGame() {
 
         setGameInProgress(true);
-        System.out.print("What's your name? ");
+        whatsYourName();
         player1 = new HumanPlayer(InputController.getInput());
-        System.out.print("What's your symbol? ");
+        whatsYourSymbol();
         player1.setPlayerSymbol(getInput().charAt(0));
 
         humanOrComputer();
@@ -27,9 +27,9 @@ public class OxRunner {
             player2 = new ComputerPlayer("NPC");
             player2.setPlayerSymbol('O');
         } else {
-            System.out.println("What's the name of second player?");
+            whatsTheNameOfTheSecondPlayer();
             player2 = new HumanPlayer(InputController.getInput());
-            System.out.print("And his symbol? ");
+            whatsTheSymbolOfThisPlayer();
             player2.setPlayerSymbol(getInput().charAt(0));
         }
 
@@ -43,7 +43,7 @@ public class OxRunner {
 
         byte gameStatus = 0;
         while(gameStatus == 0) {
-            System.out.print("Your move ");
+            yourMove();
             player1.makeMove();
             printGameBoard();
             gameStatus = gameStatus();
@@ -52,7 +52,7 @@ public class OxRunner {
                 finishGame(player1, gameStatus);
             }
 
-            System.out.println("Opponent's move");
+            opponentsMove();
             player2.makeMove();
             printGameBoard();
             gameStatus = gameStatus();
@@ -75,10 +75,10 @@ public class OxRunner {
     public static void finishGame(Player p, byte gameStatus) {
         setGameInProgress(false);
         if(gameStatus == 1) {
-            System.out.println("Game finished! " + p.getName() + " won");
+            gameFinishedWithWinner(p);
             enterMenu();
         } else {
-            System.out.println("Game finished! No winner");
+            gameFinishedWithoutWinner();
             enterMenu();
         }
     }
