@@ -15,7 +15,7 @@ public class ComputerPlayer extends Player{
     public void makeMove() {
         int xSize = Rules.getBoardSizeX();
         int ySize = Rules.getBoardSizeY();
-        String move = String.valueOf(random.nextInt(xSize-1)+1)
+        String move = (random.nextInt(xSize-1)+1)
                 + String.valueOf(random.nextInt(ySize-1)+1);
 
         try {

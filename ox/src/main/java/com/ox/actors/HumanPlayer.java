@@ -1,5 +1,6 @@
 package com.ox.actors;
 
+import com.ox.MoveToBoardException;
 import com.ox.ioController.InputController;
 import com.ox.ioController.OutputController;
 
@@ -19,7 +20,7 @@ public class HumanPlayer extends Player {
         } else {
             try {
                 addMoveToBoard(input, this);
-            } catch (Exception e) {
+            } catch (MoveToBoardException e) {
                 OutputController.thisFieldIsOccupied();
                 makeMove();
             }

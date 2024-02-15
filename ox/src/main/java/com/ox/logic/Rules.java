@@ -1,10 +1,10 @@
 package com.ox.logic;
 
+import com.ox.MoveToBoardException;
 import com.ox.actors.Player;
 
 public class Rules {
-    //private static List<Character> moves;
-    //private static List<List<Character>> moves;
+
     private static Character[][] board;
 
     private static int boardSizeX = 3;
@@ -60,12 +60,12 @@ public class Rules {
         }
     }
 
-    public static void addMoveToBoard(String s, Player p) throws Exception {
+    public static void addMoveToBoard(String s, Player p) throws MoveToBoardException {
         int move = Integer.parseInt(s);
         if (board[move / 10 - 1][move % 10 - 1].equals(' ')) {
             board[move / 10 - 1][move % 10 - 1] = p.getPlayerSymbol();
         } else {
-            throw new Exception();
+            throw new MoveToBoardException();
         }
     }
 

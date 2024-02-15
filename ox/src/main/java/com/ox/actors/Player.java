@@ -3,8 +3,8 @@ package com.ox.actors;
 
 public abstract class Player {
 
-    private String name;
-    private int points = 0;
+    private final String name;
+    //private int points = 0;
     private Character playerSymbol= ' ';
 
     public Player(String name) {
@@ -15,16 +15,16 @@ public abstract class Player {
         return name;
     }
 
-    public int getPoints() {
+/*    public int getPoints() {
         return points;
-    }
+    }*/
     public Character getPlayerSymbol() {
         return playerSymbol;
     }
 
-    public void addPoint() {
+/*    public void addPoint() {
         points++;
-    }
+    }*/
 
     public void setPlayerSymbol(Character playerSymbol) {
         this.playerSymbol = Character.toUpperCase(playerSymbol);

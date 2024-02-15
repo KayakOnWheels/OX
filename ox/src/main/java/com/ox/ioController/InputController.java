@@ -36,7 +36,7 @@ public class InputController {
         } else if("n".equals(input)) {
             return false;
         }
-        else return false;
+        return false;
     }
 
     public static void enterMenu() {
