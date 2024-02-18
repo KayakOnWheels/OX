@@ -8,11 +8,9 @@ import com.ox.logic.Rules;
 import jdk.jfr.Description;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import static com.ox.logic.Rules.*;
 
-@SpringBootTest
 class OxApplicationTests {
 
     @Test

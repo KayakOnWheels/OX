@@ -12,6 +12,7 @@ import static com.ox.logic.Rules.*;
 public class OxRunner {
     private static Player player1;
     private static Player player2;
+    private static Player whoseMove = new HumanPlayer("gg");
 
 
     public static void startGame() {
@@ -39,20 +40,22 @@ public class OxRunner {
         processGame();
     }
 
+
     public static void processGame() {
 
         byte gameStatus = 0;
         while(gameStatus == 0) {
             yourMove();
+            whoseMove = player1;
             player1.makeMove();
             printGameBoard();
             gameStatus = gameStatus();
-
             if (gameStatus == 1 || gameStatus == -1) {
                 finishGame(player1, gameStatus);
             }
 
             opponentsMove();
+            whoseMove = player2;
             player2.makeMove();
             printGameBoard();
             gameStatus = gameStatus();
@@ -81,6 +84,10 @@ public class OxRunner {
             gameFinishedWithoutWinner();
             enterMenu();
         }
+    }
+
+    public static Player getWhoseMove() {
+        return whoseMove;
     }
 
 }

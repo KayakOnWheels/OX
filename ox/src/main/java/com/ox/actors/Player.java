@@ -5,7 +5,7 @@ public abstract class Player {
 
     private final String name;
     //private int points = 0;
-    private Character playerSymbol= ' ';
+    private Character playerSymbol= 'x';
 
     public Player(String name) {
         this.name = name;

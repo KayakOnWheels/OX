@@ -12,6 +12,21 @@ public class HumanPlayer extends Player {
         super(name);
     }
 
+/*    @Override
+    public void makeMove() {
+        String input = InputController.getInputInGame();
+        if ("m".equals(input)) {
+            InputController.enterMenu();
+        } else {
+            try {
+                addMoveToBoard(input, this);
+            } catch (MoveToBoardException e) {
+                OutputController.thisFieldIsOccupied();
+                makeMove();
+            }
+        }
+    }*/
+
     @Override
     public void makeMove() {
         String input = InputController.getInputInGame();

@@ -1,5 +1,5 @@
 package com.ox;
 
-public class MoveToBoardException extends Exception{
+public class MoveToBoardException extends RuntimeException{
 
 }
