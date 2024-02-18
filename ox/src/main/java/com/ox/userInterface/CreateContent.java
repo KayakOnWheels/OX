@@ -17,16 +17,25 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 
 public class CreateContent {
     private static int boardButtonNumber;
+    private static StackPane rootMenuScene = new StackPane();
+    private static StackPane rootGameScene = new StackPane();
 
-    public static void createBoard(GridPane gridPane) {
+    private static Scene menuScene = new Scene(rootMenuScene, 300, 250);
+    private static Scene gameScene = new Scene(rootGameScene, 300, 250);
+
+
+    public static void showBoard(Stage stage) {
+        GridPane boardGrid = new GridPane();
+        rootGameScene.getChildren().add(boardGrid);
 
         for (int xi = 0; xi < Rules.getBoardSizeX(); xi++) {
             for (int yi = 0; yi < Rules.getBoardSizeY(); yi++) {
-                Button btn = new Button();
+                Button btn = new Button(Character.toString(Rules.getBoard()[xi][yi]));
                 btn.setMinSize(50,50);
                 btn.setId(xi+1 + Integer.toString(yi+1));
                 btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -37,23 +46,28 @@ public class CreateContent {
                         Rules.addMoveToBoard(btn.getId(), OxRunner.getWhoseMove());
                     }
                 });
-                gridPane.add(btn, xi, yi);
+                boardGrid.add(btn, xi, yi);
             }
         }
+        stage.setScene(gameScene);
+        stage.show();
     }
 
-    public static void createMenu(VBox vBox) {
+    public static void showMenu(Stage stage) {
+        VBox menuGrid = new VBox(8);
+        menuGrid.setAlignment(Pos.CENTER);
+        rootMenuScene.getChildren().add(menuGrid);
+
         Label headerLb = new Label("OX");
         headerLb.setMinSize(100,10);
         headerLb.setAlignment(Pos.CENTER);
-
 
         Button resumeBtn = new Button("Resume");
         resumeBtn.setMinSize(100,10);
         resumeBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //resumeGame
+                confirmChoice(stage, handler -> System.out.println("fsdfgsdgsd"));
             }
         });
 
@@ -62,7 +76,7 @@ public class CreateContent {
         newGameBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //startGame
+                confirmChoice(stage, handler -> System.out.println("fsdfgsdgsd"));
             }
         });
 
@@ -93,25 +107,40 @@ public class CreateContent {
             }
         });
 
-        vBox.getChildren().addAll(headerLb, resumeBtn, newGameBtn, statisticsBtn, helpBtn, endGameBtn);
+        menuGrid.getChildren().addAll(headerLb, resumeBtn, newGameBtn, statisticsBtn, helpBtn, endGameBtn);
+
+        stage.setScene(menuScene);
+        stage.show();
     }
 
-    public static void confirmChoice() {
+
+    public static void confirmChoice(Stage stage, EventHandler<ActionEvent> yes) {
         StackPane rootConfirmationScene = new StackPane();
         Scene confirmationScene = new Scene(rootConfirmationScene, 300, 250);
 
-        HBox hBox = new HBox(20);
-        VBox vBox = new VBox(20);
+        HBox hBox = new HBox(80);
+        VBox vBox = new VBox(30);
 
-        vBox.getChildren().add(hBox);
-        Label youSure = new Label("Are you sure");
-        vBox.getChildren().add(youSure);
+        vBox.setAlignment(Pos.CENTER);
+        hBox.setAlignment(Pos.CENTER);
+
+        Label youSureLb = new Label("Are you sure");
+        youSureLb.setAlignment(Pos.CENTER);
 
         Button yesBtn = new Button("Yes");
         Button noBtn = new Button("No");
+
+        yesBtn.setOnAction(yes);
+        noBtn.setOnAction(event -> showMenu(stage));
+
+        vBox.getChildren().addAll(youSureLb, hBox);
         hBox.getChildren().addAll(yesBtn, noBtn);
 
-        rootConfirmationScene.getChildren().addAll(hBox, vBox);
+        rootConfirmationScene.getChildren().add(vBox);
+
+        stage.setScene(confirmationScene);
+        stage.show();
     }
+
 
 }

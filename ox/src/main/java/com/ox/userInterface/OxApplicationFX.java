@@ -1,5 +1,6 @@
 package com.ox.userInterface;
 
+import com.ox.logic.Rules;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -21,26 +22,10 @@ public class OxApplicationFX extends Application{
     public void start(Stage primaryStage) {
 
         primaryStage.setTitle("OX");
-        StackPane rootMenuScene = new StackPane();
-        StackPane rootGameScene = new StackPane();
 
-        Scene menuScene = new Scene(rootMenuScene, 300, 250);
-        Scene gameScene = new Scene(rootGameScene, 300, 250);
+        Rules.generateBoard(' ');
 
-
-        GridPane boardGrid = new GridPane();
-        VBox menuGrid = new VBox(8);
-        menuGrid.setAlignment(Pos.CENTER);
-
-        rootMenuScene.getChildren().add(menuGrid);
-        rootGameScene.getChildren().add(boardGrid);
-
-        CreateContent.createBoard(boardGrid);
-        CreateContent.createMenu(menuGrid);
-
-        primaryStage.setScene(menuScene);
-        primaryStage.show();
+        CreateContent.showMenu(primaryStage);
 
     }
-
 }
