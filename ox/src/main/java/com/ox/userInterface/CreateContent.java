@@ -1,5 +1,8 @@
 package com.ox.userInterface;
 
+import com.ox.actors.ComputerPlayer;
+import com.ox.actors.HumanPlayer;
+import com.ox.actors.Player;
 import com.ox.logic.OxRunner;
 import com.ox.logic.Rules;
 import javafx.event.ActionEvent;
@@ -10,28 +13,29 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+
 
 
 public class CreateContent {
     private static final StackPane rootMenuScene = new StackPane();
     private static final StackPane rootGameScene = new StackPane();
     private static final StackPane rootPreGamePane = new StackPane();
+    private static StackPane currentRootPane;
 
-    private static final Scene menuScene = new Scene(rootMenuScene, 300, 250);
-    private static final Scene gameScene = new Scene(rootGameScene, 300, 250);
-    private static final Scene preGameScene = new Scene(rootPreGamePane, 300, 250);
+    private static final Scene menuScene = new Scene(rootMenuScene, 500, 500);
+    private static final Scene gameScene = new Scene(rootGameScene, 500, 500);
+    private static final Scene preGameScene = new Scene(rootPreGamePane, 500, 500);
 
 
 
     public static void showBoard(Stage stage) {
         GridPane boardGrid = new GridPane();
         rootGameScene.getChildren().add(boardGrid);
+        currentRootPane = rootGameScene;
 
         for (int xi = 0; xi < Rules.getBoardSizeX(); xi++) {
             for (int yi = 0; yi < Rules.getBoardSizeY(); yi++) {
@@ -54,9 +58,10 @@ public class CreateContent {
     }
 
     public static void showMenu(Stage stage) {
-        VBox menuGrid = new VBox(8);
-        menuGrid.setAlignment(Pos.CENTER);
-        rootMenuScene.getChildren().add(menuGrid);
+        VBox menuVBox = new VBox(8);
+        menuVBox.setAlignment(Pos.CENTER);
+        rootMenuScene.getChildren().add(menuVBox);
+        currentRootPane = rootMenuScene;
 
         Label headerLb = new Label("OX");
         headerLb.setMinSize(100,10);
@@ -76,38 +81,38 @@ public class CreateContent {
         newGameBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                confirmChoice(stage, handler -> System.out.println("fsdfgsdgsd"));
+                confirmChoice(stage, handler -> showPreGameScreen(stage));
             }
         });
 
         Button statisticsBtn = new Button("Statistics");
         statisticsBtn.setMinSize(100,10);
-        newGameBtn.setOnAction(new EventHandler<ActionEvent>() {
+        statisticsBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //stats
+                confirmChoice(stage, handler -> System.out.println("fsdfgsdgsd"));
             }
         });
 
         Button helpBtn = new Button("Help");
         helpBtn.setMinSize(100,10);
-        newGameBtn.setOnAction(new EventHandler<ActionEvent>() {
+        helpBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //Help
+                confirmChoice(stage, handler -> System.out.println("fsdfgsdgsd"));
             }
         });
 
         Button endGameBtn = new Button("Exit");
         endGameBtn.setMinSize(100,10);
-        newGameBtn.setOnAction(new EventHandler<ActionEvent>() {
+        endGameBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //exit
+                confirmChoice(stage, handler -> System.out.println("fsdfgsdgsd"));
             }
         });
 
-        menuGrid.getChildren().addAll(headerLb, resumeBtn, newGameBtn, statisticsBtn, helpBtn, endGameBtn);
+        menuVBox.getChildren().addAll(headerLb, resumeBtn, newGameBtn, statisticsBtn, helpBtn, endGameBtn);
 
         stage.setScene(menuScene);
         stage.show();
@@ -116,14 +121,15 @@ public class CreateContent {
 
 
     public static void confirmChoice(Stage stage, EventHandler<ActionEvent> yes) {
-        StackPane rootConfirmationScene = new StackPane();
-        Scene confirmationScene = new Scene(rootConfirmationScene, 300, 250);
 
         HBox hBox = new HBox(80);
         VBox vBox = new VBox(30);
 
         vBox.setAlignment(Pos.CENTER);
         hBox.setAlignment(Pos.CENTER);
+
+        vBox.setMaxSize(300, 200);
+        vBox.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, javafx.geometry.Insets.EMPTY)));
 
         Label youSureLb = new Label("Are you sure");
         youSureLb.setAlignment(Pos.CENTER);
@@ -132,18 +138,18 @@ public class CreateContent {
         Button noBtn = new Button("No");
 
         yesBtn.setOnAction(yes);
-        noBtn.setOnAction(event -> showMenu(stage));
+        noBtn.setOnAction(event -> {showMenu(stage); currentRootPane.getChildren().remove(vBox);});
 
         vBox.getChildren().addAll(youSureLb, hBox);
         hBox.getChildren().addAll(yesBtn, noBtn);
 
-        rootConfirmationScene.getChildren().add(vBox);
+        currentRootPane.getChildren().add(vBox);
 
-        stage.setScene(confirmationScene);
         stage.show();
     }
 
     public static void showPreGameScreen(Stage stage) {
+        currentRootPane = rootPreGamePane;
 
         Label gameRulesLb = new Label("Game Rules");
         Label sizeXLb = new Label("X Size");
@@ -170,8 +176,27 @@ public class CreateContent {
         Separator separator2 = new Separator();
         Separator separator3 = new Separator();
 
+        acceptBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                OxRunner.setPlayer1(new HumanPlayer(p1NameTF.getCharacters().toString()));
+                OxRunner.getPlayer1().setPlayerSymbol(p1SymbolTF.getCharacters().charAt(0));
 
+                if(computerPlayerCheckBox.isSelected()) {
+                    OxRunner.setPlayer2(new ComputerPlayer(p1NameTF.getCharacters().toString()));
+                } else {
+                    OxRunner.setPlayer2(new HumanPlayer(p1NameTF.getCharacters().toString()));
+                }
+                OxRunner.getPlayer2().setPlayerSymbol(p1SymbolTF.getCharacters().charAt(0));
 
+                Rules.setBoardSizeX(Integer.parseInt(sizeXTF.getCharacters().toString()));
+                Rules.setBoardSizeY(Integer.parseInt(sizeYTF.getCharacters().toString()));
+                Rules.setInRowToWin(Integer.parseInt(strikeTF.getCharacters().toString()));
+
+                stage.setScene(gameScene);
+                stage.show();
+            }
+        });
 
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
@@ -252,5 +277,9 @@ public class CreateContent {
         rootPreGamePane.getChildren().add(gridPane);
         stage.setScene(preGameScene);
         stage.show();
+    }
+
+    public static void showGameFinishedBox(Stage stage) {
+
     }
 }

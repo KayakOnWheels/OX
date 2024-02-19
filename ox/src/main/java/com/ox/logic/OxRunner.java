@@ -90,4 +90,19 @@ public class OxRunner {
         return whoseMove;
     }
 
+    public static Player getPlayer1() {
+        return player1;
+    }
+
+    public static Player getPlayer2() {
+        return player2;
+    }
+
+    public static void setPlayer1(Player player1) {
+        OxRunner.player1 = player1;
+    }
+
+    public static void setPlayer2(Player player2) {
+        OxRunner.player2 = player2;
+    }
 }
