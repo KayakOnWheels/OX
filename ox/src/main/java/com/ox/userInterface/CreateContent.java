@@ -1,37 +1,32 @@
 package com.ox.userInterface;
 
-import com.ox.actors.Player;
-import com.ox.ioController.InputController;
 import com.ox.logic.OxRunner;
 import com.ox.logic.Rules;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
-import javafx.scene.Parent;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import org.controlsfx.control.spreadsheet.Grid;
-import org.controlsfx.control.spreadsheet.GridBase;
 
 
 public class CreateContent {
-    private static int boardButtonNumber;
-    private static StackPane rootMenuScene = new StackPane();
-    private static StackPane rootGameScene = new StackPane();
+    private static final StackPane rootMenuScene = new StackPane();
+    private static final StackPane rootGameScene = new StackPane();
+    private static final StackPane rootPreGamePane = new StackPane();
 
-    private static Scene menuScene = new Scene(rootMenuScene, 300, 250);
-    private static Scene gameScene = new Scene(rootGameScene, 300, 250);
+    private static final Scene menuScene = new Scene(rootMenuScene, 300, 250);
+    private static final Scene gameScene = new Scene(rootGameScene, 300, 250);
+    private static final Scene preGameScene = new Scene(rootPreGamePane, 300, 250);
+
 
 
     public static void showBoard(Stage stage) {
@@ -81,7 +76,7 @@ public class CreateContent {
         newGameBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                confirmChoice(stage, handler -> showPreGameScreen(stage));
+                confirmChoice(stage, handler -> System.out.println("fsdfgsdgsd"));
             }
         });
 
@@ -156,24 +151,32 @@ public class CreateContent {
         Label strikeLb = new Label("In Row To Win");
         Label p1Lb = new Label("First Player");
         Label p2Lb = new Label("Second Player");
-        Label nameLb = new Label("Name");
-        Label symbolLb = new Label("Symbol") ;
-        Label computerPlayerLb = new Label("Play Against PC");
+        Label p1NameLb = new Label("Name");
+        Label p1SymbolLb = new Label("Symbol") ;
+        Label p2NameLb = new Label("Name");
+        Label p2SymbolLb = new Label("Symbol") ;
 
-        TextField nameTF = new TextField("Marco");
-        TextField symbolTF = new TextField(" ");
+        TextField p1NameTF = new TextField("Marco");
+        TextField p2NameTF = new TextField("Polo");
+        TextField p1SymbolTF = new TextField("X");
+        TextField p2SymbolTF = new TextField("O");
         TextField sizeXTF = new TextField("3");
         TextField sizeYTF = new TextField("3");
         TextField strikeTF = new TextField("3");
 
-        CheckBox computerPlayerCheckBox = new CheckBox();
+        CheckBox computerPlayerCheckBox = new CheckBox("Play Against PC");
         Button acceptBtn = new Button("Start!");
+        Separator separator1 = new Separator();
+        Separator separator2 = new Separator();
+        Separator separator3 = new Separator();
+
+
 
 
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setHgap(10);
-        gridPane.setVgap(10);
+        gridPane.setVgap(0);
         gridPane.setPadding(new Insets(25, 25, 25, 25));
 
         gridPane.add(gameRulesLb, 0, 0);
@@ -185,24 +188,66 @@ public class CreateContent {
         gridPane.add(sizeYTF, 1, 2);
         gridPane.add(strikeTF, 2, 2);
 
-        gridPane.add(p1Lb, 0, 3);
-        gridPane.add(nameLb, 0, 4);
-        gridPane.add(symbolLb, 1, 4);
-        gridPane.add(nameTF, 0, 5);
-        gridPane.add(symbolTF, 1, 5);
+        gridPane.add(separator1, 0,3, 3, 1);
 
-        gridPane.add(p2Lb, 0, 6);
-        gridPane.add(computerPlayerLb, 0, 7);
-        gridPane.add(computerPlayerCheckBox, 1, 7);
-        gridPane.add(nameLb, 0, 8);
-        gridPane.add(symbolLb, 1, 8);
-        gridPane.add(nameTF, 0, 9);
-        gridPane.add(symbolTF, 1, 9);
+        gridPane.add(p1Lb, 0, 4);
+        gridPane.add(p1NameLb, 0, 5);
+        gridPane.add(p1SymbolLb, 1, 5);
+        gridPane.add(p1NameTF, 0, 6);
+        gridPane.add(p1SymbolTF, 1, 6);
+        gridPane.add(separator2, 0,7, 3, 1);
 
-        gridPane.add(acceptBtn, 0, 10);
+        gridPane.add(p2Lb, 0, 8);
+        gridPane.add(computerPlayerCheckBox, 2, 8);
+        gridPane.add(p2NameLb, 0, 9);
+        gridPane.add(p2SymbolLb, 1, 9);
+        gridPane.add(p2NameTF, 0, 10);
+        gridPane.add(p2SymbolTF, 1, 10);
+        gridPane.add(separator3, 0,11, 3, 1);
 
-        StackPane rootPreGamePane = new StackPane();
-        Scene preGameScene = new Scene(rootPreGamePane, 500, 500);
+        gridPane.add(acceptBtn, 0, 12, 3, 1);
+
+
+        gameRulesLb.setFont(Font.font("Arial", 15));
+        p1Lb.setFont(Font.font("Arial", 15));
+        p2Lb.setFont(Font.font("Arial", 15));
+
+        GridPane.setMargin(gameRulesLb, new Insets(10, 10, 10, 0));
+        GridPane.setMargin(p1Lb, new Insets(0, 0, 5, 0));
+        GridPane.setMargin(p2Lb, new Insets(0, 0, 5, 0));
+        GridPane.setMargin(computerPlayerCheckBox, new Insets(0, 0, 0, 0));
+        GridPane.setMargin(acceptBtn, new Insets(10, 0, 10, 0));
+        GridPane.setHalignment(acceptBtn, HPos.CENTER);
+
+        GridPane.setMargin(separator1, new Insets(20, 0, 20, 0));
+        GridPane.setMargin(separator2, new Insets(20, 0, 20, 0));
+        GridPane.setMargin(separator3, new Insets(20, 0, 20, 0));
+
+        GridPane.setHalignment(sizeXLb, HPos.CENTER);
+        GridPane.setHalignment(sizeXTF, HPos.CENTER);
+        sizeXLb.setMaxWidth(50);
+        sizeXLb.setAlignment(Pos.CENTER);
+        sizeXTF.maxWidthProperty().bind(sizeXLb.maxWidthProperty());
+        sizeXTF.setAlignment(Pos.CENTER);
+
+        GridPane.setHalignment(sizeYLb, HPos.CENTER);
+        GridPane.setHalignment(sizeYTF, HPos.CENTER);
+        sizeYLb.setMaxWidth(50);
+        sizeYLb.setAlignment(Pos.CENTER);
+        sizeYTF.maxWidthProperty().bind(sizeXLb.maxWidthProperty());
+        sizeYTF.setAlignment(Pos.CENTER);
+
+        GridPane.setHalignment(computerPlayerCheckBox, HPos.RIGHT);
+        GridPane.setValignment(computerPlayerCheckBox, VPos.BOTTOM);
+
+        GridPane.setHalignment(strikeLb, HPos.CENTER);
+        GridPane.setHalignment(strikeTF, HPos.CENTER);
+        strikeLb.setMaxWidth(100);
+        strikeLb.setAlignment(Pos.CENTER);
+        strikeTF.maxWidthProperty().bind(sizeXLb.maxWidthProperty());
+        strikeTF.setAlignment(Pos.CENTER);
+
+        acceptBtn.setPrefSize(150, 50);
 
         rootPreGamePane.getChildren().add(gridPane);
         stage.setScene(preGameScene);

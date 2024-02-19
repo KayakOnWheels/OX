@@ -25,7 +25,6 @@ public class OxApplicationFX extends Application{
 
         Rules.generateBoard(' ');
 
-        //CreateContent.showMenu(primaryStage);
-CreateContent.showPreGameScreen(primaryStage);
+        CreateContent.showMenu(primaryStage);
     }
 }
