@@ -3,8 +3,10 @@ package com.ox.userInterface;
 import com.ox.actors.ComputerPlayer;
 import com.ox.actors.HumanPlayer;
 import com.ox.actors.Player;
+import com.ox.ioController.OutputController;
 import com.ox.logic.OxRunner;
 import com.ox.logic.Rules;
+import javafx.css.Rule;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -13,11 +15,18 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.io.File;
 
 
 public class CreateContent {
@@ -30,29 +39,56 @@ public class CreateContent {
     private static final Scene gameScene = new Scene(rootGameScene, 500, 500);
     private static final Scene preGameScene = new Scene(rootPreGamePane, 500, 500);
 
+    private static final Image imageback = new Image("file:src\\main\\resources\\static\\backgrounds\\rect3.png");
+    private static final Background background = new Background(new BackgroundImage(imageback, BackgroundRepeat.REPEAT,
+            BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT));
+
 
 
     public static void showBoard(Stage stage) {
         GridPane boardGrid = new GridPane();
         rootGameScene.getChildren().add(boardGrid);
         currentRootPane = rootGameScene;
+        rootGameScene.setBackground(background);
+
+        boardGrid.setAlignment(Pos.CENTER);
 
         for (int xi = 0; xi < Rules.getBoardSizeX(); xi++) {
             for (int yi = 0; yi < Rules.getBoardSizeY(); yi++) {
                 Button btn = new Button(Character.toString(Rules.getBoard()[xi][yi]));
                 btn.setMinSize(50,50);
-                btn.setId(xi+1 + Integer.toString(yi+1));
+                btn.setId(yi+1 + Integer.toString(xi+1));
                 btn.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
                         //Button btn = (Button) event.getTarget();
                         btn.setText(OxRunner.getWhoseMove().getPlayerSymbol().toString());
                         Rules.addMoveToBoard(btn.getId(), OxRunner.getWhoseMove());
+                        if(Rules.gameStatus() == 1 || Rules.gameStatus() == -1) {
+                            showGameFinishedBox(stage);
+                        }
+                        if(OxRunner.getWhoseMove().equals(OxRunner.getPlayer1())) {
+                            OxRunner.setWhoseMove(OxRunner.getPlayer2());
+                        } else {
+                            OxRunner.setWhoseMove(OxRunner.getPlayer1());
+                        }
+                        OutputController.printGameBoard();
+                        System.out.println(OxRunner.getWhoseMove());
+                        System.out.println(Rules.gameStatus());
                     }
                 });
                 boardGrid.add(btn, xi, yi);
             }
         }
+
+        rootGameScene.setOnKeyPressed(event -> {
+            KeyCode keyCode = event.getCode();
+            if(keyCode.equals(KeyCode.ESCAPE)) {
+                showMenu(stage);
+            }
+
+        });
+
         stage.setScene(gameScene);
         stage.show();
     }
@@ -62,6 +98,7 @@ public class CreateContent {
         menuVBox.setAlignment(Pos.CENTER);
         rootMenuScene.getChildren().add(menuVBox);
         currentRootPane = rootMenuScene;
+        rootMenuScene.setBackground(background);
 
         Label headerLb = new Label("OX");
         headerLb.setMinSize(100,10);
@@ -72,7 +109,14 @@ public class CreateContent {
         resumeBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                confirmChoice(stage, handler -> System.out.println("fsdfgsdgsd"));
+                 confirmChoice(stage, handler -> {
+                     currentRootPane.getChildren().clear();
+                     if(Rules.isGameInProgress()) {
+                         showBoard(stage);
+                     } else {
+                        showMenu(stage);
+                     }
+                 });
             }
         });
 
@@ -81,7 +125,7 @@ public class CreateContent {
         newGameBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                confirmChoice(stage, handler -> showPreGameScreen(stage));
+                confirmChoice(stage, handler -> { currentRootPane.getChildren().clear(); showPreGameScreen(stage);});
             }
         });
 
@@ -150,6 +194,7 @@ public class CreateContent {
 
     public static void showPreGameScreen(Stage stage) {
         currentRootPane = rootPreGamePane;
+        rootPreGamePane.setBackground(background);
 
         Label gameRulesLb = new Label("Game Rules");
         Label sizeXLb = new Label("X Size");
@@ -183,16 +228,20 @@ public class CreateContent {
                 OxRunner.getPlayer1().setPlayerSymbol(p1SymbolTF.getCharacters().charAt(0));
 
                 if(computerPlayerCheckBox.isSelected()) {
-                    OxRunner.setPlayer2(new ComputerPlayer(p1NameTF.getCharacters().toString()));
+                    OxRunner.setPlayer2(new ComputerPlayer(p2NameTF.getCharacters().toString()));
+                    OxRunner.getPlayer2().setPlayerSymbol(p1SymbolTF.getCharacters().charAt(0));
                 } else {
-                    OxRunner.setPlayer2(new HumanPlayer(p1NameTF.getCharacters().toString()));
+                    OxRunner.setPlayer2(new HumanPlayer(p2NameTF.getCharacters().toString()));
+                    OxRunner.getPlayer2().setPlayerSymbol(p2SymbolTF.getCharacters().charAt(0));
                 }
-                OxRunner.getPlayer2().setPlayerSymbol(p1SymbolTF.getCharacters().charAt(0));
+                OxRunner.setWhoseMove(OxRunner.getPlayer1());
 
                 Rules.setBoardSizeX(Integer.parseInt(sizeXTF.getCharacters().toString()));
                 Rules.setBoardSizeY(Integer.parseInt(sizeYTF.getCharacters().toString()));
                 Rules.setInRowToWin(Integer.parseInt(strikeTF.getCharacters().toString()));
 
+                Rules.generateBoard(' ');
+                showBoard(stage);
                 stage.setScene(gameScene);
                 stage.show();
             }
@@ -262,6 +311,13 @@ public class CreateContent {
         sizeYTF.maxWidthProperty().bind(sizeXLb.maxWidthProperty());
         sizeYTF.setAlignment(Pos.CENTER);
 
+        p1SymbolTF.setPrefWidth(50);
+        p1SymbolTF.setAlignment(Pos.CENTER);
+        GridPane.setHalignment(p1SymbolLb, HPos.CENTER);
+        p2SymbolTF.setPrefWidth(50);
+        p2SymbolTF.setAlignment(Pos.CENTER);
+        GridPane.setHalignment(p2SymbolLb, HPos.CENTER);
+
         GridPane.setHalignment(computerPlayerCheckBox, HPos.RIGHT);
         GridPane.setValignment(computerPlayerCheckBox, VPos.BOTTOM);
 
@@ -280,6 +336,30 @@ public class CreateContent {
     }
 
     public static void showGameFinishedBox(Stage stage) {
+        VBox vBox = new VBox(30);
 
+        vBox.setAlignment(Pos.CENTER);
+
+        vBox.setMaxSize(300, 200);
+        vBox.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, javafx.geometry.Insets.EMPTY)));
+
+        Label gameFinishedLb = new Label("Game Finished!");
+        gameFinishedLb.setAlignment(Pos.CENTER);
+        Label whoWonLb = new Label(OxRunner.getWhoseMove().getName() + " won!");
+        Label boardFullLb = new Label("No more fields available");
+
+        Button menuBtn = new Button("Menu");
+
+        menuBtn.setOnAction(event -> { showMenu(stage); currentRootPane.getChildren().remove(vBox); rootGameScene.getChildren().clear();});
+
+        if(Rules.gameStatus() == 1) {
+            vBox.getChildren().addAll(gameFinishedLb, whoWonLb, menuBtn);
+        } else {
+            vBox.getChildren().addAll(gameFinishedLb, boardFullLb, menuBtn);
+        }
+
+
+        currentRootPane.getChildren().add(vBox);
+        stage.show();
     }
 }

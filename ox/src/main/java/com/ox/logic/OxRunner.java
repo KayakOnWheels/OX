@@ -12,6 +12,11 @@ import static com.ox.logic.Rules.*;
 public class OxRunner {
     private static Player player1;
     private static Player player2;
+
+    public static void setWhoseMove(Player whoseMove) {
+        OxRunner.whoseMove = whoseMove;
+    }
+
     private static Player whoseMove = new HumanPlayer("gg");
 
 

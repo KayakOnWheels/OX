@@ -23,7 +23,6 @@ public class OxApplicationFX extends Application{
 
         primaryStage.setTitle("OX");
 
-        Rules.generateBoard(' ');
 
         CreateContent.showMenu(primaryStage);
     }

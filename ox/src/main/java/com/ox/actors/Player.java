@@ -1,6 +1,8 @@
 package com.ox.actors;
 
 
+import java.util.Objects;
+
 public abstract class Player {
 
     private final String name;
@@ -32,4 +34,16 @@ public abstract class Player {
 
 
     public abstract void makeMove();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Player player)) return false;
+        return Objects.equals(name, player.name) && Objects.equals(playerSymbol, player.playerSymbol);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, playerSymbol);
+    }
 }
