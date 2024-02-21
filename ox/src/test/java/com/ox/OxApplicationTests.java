@@ -57,6 +57,59 @@ class OxApplicationTests {
     }
 
     @Test
+    void gameStatusShouldReturn1WhenDiagonalStrikeFromLeftToRightCase2() {
+        //Given
+        setBoardSizeX(6);
+        setBoardSizeY(6);
+        setInRowToWin(5);
+        generateBoard(' ');
+        Rules.getBoard()[0][0] = 'x';
+        Rules.getBoard()[1][1] = 'x';
+        Rules.getBoard()[2][2] = 'x';
+        Rules.getBoard()[3][3] = 'x';
+        Rules.getBoard()[1][0] = 'o';
+        Rules.getBoard()[2][0] = 'o';
+        Rules.getBoard()[2][1] = 'o';
+        OutputController.printGameBoard();
+
+        //When
+        int result = gameStatus();
+        boolean result2 = isDiagonalStrikeLeftRight();
+
+        //Then
+        Assertions.assertEquals(0, result);
+        Assertions.assertFalse(result2);
+    }
+
+    @Test
+    void gameStatusShouldReturn1WhenDiagonalStrikeFromLeftToRightCase3() {
+        //Given
+        setBoardSizeX(6);
+        setBoardSizeY(6);
+        setInRowToWin(5);
+        generateBoard(' ');
+        Rules.getBoard()[0][0] = 'x';
+        Rules.getBoard()[1][1] = 'x';
+        Rules.getBoard()[2][2] = 'x';
+        Rules.getBoard()[3][3] = 'x';
+        Rules.getBoard()[4][4] = 'x';
+        Rules.getBoard()[1][0] = 'o';
+        Rules.getBoard()[2][0] = 'o';
+        Rules.getBoard()[2][1] = 'o';
+        Rules.getBoard()[3][2] = 'o';
+        Rules.getBoard()[4][3] = 'o';
+        OutputController.printGameBoard();
+
+        //When
+        int result = gameStatus();
+        boolean result2 = isDiagonalStrikeLeftRight();
+
+        //Then
+        Assertions.assertEquals(1, result);
+        Assertions.assertTrue(result2);
+    }
+
+    @Test
     void gameStatusShouldReturn1WhenHorizontalStrike() {
         //Given
         setBoardSizeX(4);
@@ -98,6 +151,28 @@ class OxApplicationTests {
         //Then
         Assertions.assertEquals(1, result);
         Assertions.assertTrue(result2);
+    }
+
+    @Test
+    void gameStatusShouldReturn1WhenVerticalStrikeCase2() {
+        //Given
+        setBoardSizeX(4);
+        setBoardSizeY(4);
+        setInRowToWin(3);
+        generateBoard(' ');
+        Rules.getBoard()[1][1] = 'o';
+        Rules.getBoard()[2][1] = 'o';
+        Rules.getBoard()[2][0] = 'x';
+        Rules.getBoard()[3][0] = 'x';
+        OutputController.printGameBoard();
+
+        //When
+        int result = gameStatus();
+        boolean result2 = isVerticalStrike();
+
+        //Then
+        //Assertions.assertEquals(0, result);
+        Assertions.assertFalse(result2);
     }
 
     @Test

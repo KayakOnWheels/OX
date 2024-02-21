@@ -3,6 +3,8 @@ package com.ox.logic;
 import com.ox.MoveToBoardException;
 import com.ox.actors.Player;
 
+import java.util.Random;
+
 public class Rules {
 
     private static Character[][] board;
@@ -69,6 +71,14 @@ public class Rules {
         }
     }
 
+    public static String getRandomField() {
+        Random random = new Random();
+        int xSize = Rules.getBoardSizeX();
+        int ySize = Rules.getBoardSizeY();
+        return (random.nextInt(xSize-1)+1)
+                + String.valueOf(random.nextInt(ySize-1)+1);
+    }
+
     public static byte gameStatus() {
         if(isVerticalStrike() || isHorizontalStrike() || isDiagonalStrikeLeftRight() || isDiagonalStrikeRightLeft()) {
             return 1;
@@ -87,7 +97,7 @@ public class Rules {
                 if (!board[xi][yi].equals(' ')) {
                     if (board[xi][yi].equals(board[xi + 1][yi])) {
                         strike++;
-                        if (strike == inRowToWin - 1) {
+                        if (strike == inRowToWin-1) {
                             return true; //game finished - player won
                         }
                     } else {
@@ -95,6 +105,7 @@ public class Rules {
                     }
                 }
             }
+            strike = 0;
         }
         return false;
     }
@@ -115,18 +126,19 @@ public class Rules {
                     }
                 }
             }
+            strike = 0;
         }
         return false;
     }
 
-    public static boolean isDiagonalStrikeLeftRight() {
+/*    public static boolean isDiagonalStrikeLeftRight() {
         //looks for diagonal strike(left-right)
         strike = 0;
         for (int yi = board[0].length - 1; yi > 0; yi--) {
             for (int xi = board.length - 1; xi > 0; xi--) {
                 if (!board[xi][yi].equals(' ')) {
                     if (board[xi][yi].equals(board[xi - 1][yi - 1])) {
-                        strike++;
+                        strike++; System.out.println(strike);
                         if (strike == inRowToWin - 1) {
                             return true; //game finished - player won
                         }
@@ -137,9 +149,30 @@ public class Rules {
             }
         }
         return false;
+    }*/
+    public static boolean isDiagonalStrikeLeftRight() {
+        for (int yi = board[0].length - 1; yi >= inRowToWin - 1; yi--) {
+            for (int xi = board.length - 1; xi >= inRowToWin - 1; xi--) {
+                if (!board[xi][yi].equals(' ')) {
+                    char current = board[xi][yi];
+                    int strike = 1;
+                    for (int i = 1; i < inRowToWin; i++) {
+                        if (board[xi - i][yi - i].equals(current)) {
+                            strike++;
+                        } else {
+                            break;
+                        }
+                    }
+                    if (strike == inRowToWin) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
-    public static boolean isDiagonalStrikeRightLeft() {
+/*    public static boolean isDiagonalStrikeRightLeft() {
         //looks for diagonal strike(right-left)
         strike = 0;
         for (int yi = 0; yi < board[0].length - 1; yi++) {
@@ -152,6 +185,28 @@ public class Rules {
                         }
                     } else {
                         strike = 0;
+                    }
+                }
+            }
+        }
+        return false;
+    }*/
+
+    public static boolean isDiagonalStrikeRightLeft() {
+        for (int yi = board[0].length - inRowToWin; yi >= 0; yi--) {
+            for (int xi = board.length - inRowToWin; xi >= 0; xi--) {
+                if (!board[xi][yi].equals(' ')) {
+                    char current = board[xi][yi];
+                    int strike = 1;
+                    for (int i = 1; i < inRowToWin; i++) {
+                        if (xi + i < board.length && yi - i >= 0 && board[xi + i][yi - i] == current) {
+                            strike++;
+                        } else {
+                            break;
+                        }
+                    }
+                    if (strike == inRowToWin) {
+                        return true;
                     }
                 }
             }

@@ -28,7 +28,7 @@ public class HumanPlayer extends Player {
     }*/
 
     @Override
-    public void makeMove() {
+    public String makeMove() {
         String input = InputController.getInputInGame();
         if ("m".equals(input)) {
             InputController.enterMenu();
@@ -40,5 +40,6 @@ public class HumanPlayer extends Player {
                 makeMove();
             }
         }
+        return null;
     }
 }

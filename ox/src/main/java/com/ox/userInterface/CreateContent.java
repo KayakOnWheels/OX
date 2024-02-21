@@ -6,13 +6,16 @@ import com.ox.actors.Player;
 import com.ox.ioController.OutputController;
 import com.ox.logic.OxRunner;
 import com.ox.logic.Rules;
+import javafx.application.Platform;
 import javafx.css.Rule;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -27,6 +30,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 
 
 public class CreateContent {
@@ -61,20 +65,38 @@ public class CreateContent {
                 btn.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        //Button btn = (Button) event.getTarget();
-                        btn.setText(OxRunner.getWhoseMove().getPlayerSymbol().toString());
                         Rules.addMoveToBoard(btn.getId(), OxRunner.getWhoseMove());
+                        btn.setText(OxRunner.getWhoseMove().getPlayerSymbol().toString());
+                        OutputController.printGameBoard();
+                        System.out.println(OxRunner.getWhoseMove());
+                        System.out.println(Rules.gameStatus());
                         if(Rules.gameStatus() == 1 || Rules.gameStatus() == -1) {
                             showGameFinishedBox(stage);
                         }
-                        if(OxRunner.getWhoseMove().equals(OxRunner.getPlayer1())) {
+
+                        if(OxRunner.getPlayer2() instanceof ComputerPlayer) {
+                            String rndField = OxRunner.getPlayer2().makeMove();
+                            String btnId = ("#" + rndField);
+
+                            System.out.println(btnId);
+                            Button retrievedButton = (Button) boardGrid.lookup(btnId);
+                            retrievedButton.setText(OxRunner.getPlayer2().getPlayerSymbol().toString());
+                            OxRunner.setWhoseMove(OxRunner.getPlayer2());
+                            OutputController.printGameBoard();
+                            System.out.println(OxRunner.getWhoseMove());
+                            System.out.println(Rules.gameStatus());
+                            if(Rules.gameStatus() == 1 || Rules.gameStatus() == -1) {
+                                showGameFinishedBox(stage);
+                            }
+                            OxRunner.setWhoseMove(OxRunner.getPlayer1());
+
+                        } else if(OxRunner.getWhoseMove().equals(OxRunner.getPlayer1())) {
                             OxRunner.setWhoseMove(OxRunner.getPlayer2());
                         } else {
                             OxRunner.setWhoseMove(OxRunner.getPlayer1());
                         }
-                        OutputController.printGameBoard();
-                        System.out.println(OxRunner.getWhoseMove());
-                        System.out.println(Rules.gameStatus());
+
+
                     }
                 });
                 boardGrid.add(btn, xi, yi);
@@ -109,14 +131,12 @@ public class CreateContent {
         resumeBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                 confirmChoice(stage, handler -> {
                      currentRootPane.getChildren().clear();
                      if(Rules.isGameInProgress()) {
                          showBoard(stage);
                      } else {
-                        showMenu(stage);
+                        showNoGameToResumeBox(stage);
                      }
-                 });
             }
         });
 
@@ -131,19 +151,14 @@ public class CreateContent {
 
         Button statisticsBtn = new Button("Statistics");
         statisticsBtn.setMinSize(100,10);
-        statisticsBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                confirmChoice(stage, handler -> System.out.println("fsdfgsdgsd"));
-            }
-        });
+        statisticsBtn.setOnAction(event -> showStatisticsScene(stage));
 
         Button helpBtn = new Button("Help");
         helpBtn.setMinSize(100,10);
         helpBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                confirmChoice(stage, handler -> System.out.println("fsdfgsdgsd"));
+                showHelpScene(stage);
             }
         });
 
@@ -152,7 +167,7 @@ public class CreateContent {
         endGameBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                confirmChoice(stage, handler -> System.out.println("fsdfgsdgsd"));
+                confirmChoice(stage, handler -> Platform.exit());
             }
         });
 
@@ -217,6 +232,7 @@ public class CreateContent {
 
         CheckBox computerPlayerCheckBox = new CheckBox("Play Against PC");
         Button acceptBtn = new Button("Start!");
+        Button returnBtn = new Button("Menu");
         Separator separator1 = new Separator();
         Separator separator2 = new Separator();
         Separator separator3 = new Separator();
@@ -229,7 +245,7 @@ public class CreateContent {
 
                 if(computerPlayerCheckBox.isSelected()) {
                     OxRunner.setPlayer2(new ComputerPlayer(p2NameTF.getCharacters().toString()));
-                    OxRunner.getPlayer2().setPlayerSymbol(p1SymbolTF.getCharacters().charAt(0));
+                    OxRunner.getPlayer2().setPlayerSymbol(p2SymbolTF.getCharacters().charAt(0));
                 } else {
                     OxRunner.setPlayer2(new HumanPlayer(p2NameTF.getCharacters().toString()));
                     OxRunner.getPlayer2().setPlayerSymbol(p2SymbolTF.getCharacters().charAt(0));
@@ -246,6 +262,8 @@ public class CreateContent {
                 stage.show();
             }
         });
+
+        returnBtn.setOnAction(event -> showMenu(stage));
 
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
@@ -280,6 +298,7 @@ public class CreateContent {
         gridPane.add(separator3, 0,11, 3, 1);
 
         gridPane.add(acceptBtn, 0, 12, 3, 1);
+        gridPane.add(returnBtn, 0, 13, 3, 1);
 
 
         gameRulesLb.setFont(Font.font("Arial", 15));
@@ -292,6 +311,7 @@ public class CreateContent {
         GridPane.setMargin(computerPlayerCheckBox, new Insets(0, 0, 0, 0));
         GridPane.setMargin(acceptBtn, new Insets(10, 0, 10, 0));
         GridPane.setHalignment(acceptBtn, HPos.CENTER);
+        GridPane.setHalignment(returnBtn, HPos.CENTER);
 
         GridPane.setMargin(separator1, new Insets(20, 0, 20, 0));
         GridPane.setMargin(separator2, new Insets(20, 0, 20, 0));
@@ -359,6 +379,64 @@ public class CreateContent {
         }
 
 
+        currentRootPane.getChildren().add(vBox);
+        stage.show();
+    }
+
+    public static void showHelpScene(Stage stage) {
+
+        Scene helpScene = new Scene(addFxml("/templates/fxmlhelpboard.fxml"), 500, 500);
+
+        helpScene.setOnKeyPressed(event -> {
+            KeyCode keyCode = event.getCode();
+            if(keyCode.equals(KeyCode.ESCAPE)) {
+                showMenu(stage);
+            }
+
+        });
+        stage.setScene(helpScene);
+        stage.show();
+    }
+
+    public static Parent addFxml(String path) {
+        try {
+            return FXMLLoader.load(CreateContent.class.getResource(path));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void showStatisticsScene(Stage stage) {
+        Scene statisticsScene = new Scene(addFxml("/templates/fxmlstatisticsboard.fxml"), 500, 500);
+
+        statisticsScene.setOnKeyPressed(event -> {
+            KeyCode keyCode = event.getCode();
+            if(keyCode.equals(KeyCode.ESCAPE)) {
+                showMenu(stage);
+            }
+
+        });
+        stage.setScene(statisticsScene);
+        stage.show();
+    }
+
+    public static void showNoGameToResumeBox(Stage stage) {
+        VBox vBox = new VBox(30);
+
+        vBox.setAlignment(Pos.CENTER);
+
+        vBox.setMaxSize(300, 200);
+        vBox.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, javafx.geometry.Insets.EMPTY)));
+
+        Label noGameLb = new Label("No game to resume!");
+        noGameLb.setAlignment(Pos.CENTER);
+
+        Button menuBtn = new Button("Menu");
+
+        menuBtn.setOnAction(event -> { showMenu(stage); currentRootPane.getChildren().remove(vBox); rootGameScene.getChildren().clear();});
+
+        vBox.getChildren().addAll(noGameLb, menuBtn);
         currentRootPane.getChildren().add(vBox);
         stage.show();
     }

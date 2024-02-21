@@ -33,7 +33,7 @@ public abstract class Player {
     }
 
 
-    public abstract void makeMove();
+    public abstract String makeMove();
 
     @Override
     public boolean equals(Object o) {
