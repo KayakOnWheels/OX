@@ -2,10 +2,8 @@ package com.ox;
 
 import com.ox.actors.HumanPlayer;
 import com.ox.actors.Player;
-import com.ox.ioController.InputController;
 import com.ox.ioController.OutputController;
 import com.ox.logic.Rules;
-import jdk.jfr.Description;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -167,11 +165,9 @@ class OxApplicationTests {
         OutputController.printGameBoard();
 
         //When
-        int result = gameStatus();
         boolean result2 = isVerticalStrike();
 
         //Then
-        //Assertions.assertEquals(0, result);
         Assertions.assertFalse(result2);
     }
 

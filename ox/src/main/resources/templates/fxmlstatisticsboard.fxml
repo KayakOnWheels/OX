@@ -14,10 +14,11 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <TableView prefHeight="297.0" prefWidth="600.0">
+      <TableView fx:id="statTable" prefHeight="297.0" prefWidth="600.0">
         <columns>
-          <TableColumn prefWidth="75.0" text="C1" />
-          <TableColumn prefWidth="75.0" text="C2" />
+          <TableColumn prefWidth="75.0" text="Player" fx:id="playerColumn" />
+          <TableColumn prefWidth="75.0" text="Won" fx:id="wonColumn" />
+          <TableColumn prefWidth="75.0" text="Lost" fx:id="lostColumn"/>
         </columns>
       </TableView>
       <Label text="ESC - Return To Menu" />

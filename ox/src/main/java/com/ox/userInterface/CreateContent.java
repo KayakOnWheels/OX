@@ -3,6 +3,7 @@ package com.ox.userInterface;
 import com.ox.actors.ComputerPlayer;
 import com.ox.actors.HumanPlayer;
 import com.ox.actors.Player;
+import com.ox.ioController.InputController;
 import com.ox.ioController.OutputController;
 import com.ox.logic.OxRunner;
 import com.ox.logic.Rules;
@@ -257,6 +258,7 @@ public class CreateContent {
                 Rules.setInRowToWin(Integer.parseInt(strikeTF.getCharacters().toString()));
 
                 Rules.generateBoard(' ');
+                Rules.setGameInProgress(true);
                 showBoard(stage);
                 stage.setScene(gameScene);
                 stage.show();
@@ -356,6 +358,10 @@ public class CreateContent {
     }
 
     public static void showGameFinishedBox(Stage stage) {
+        Player winner = OxRunner.getWhoseMove();
+        Player looser;
+
+        looser = winner.equals(OxRunner.getPlayer1()) ? OxRunner.getPlayer2() : OxRunner.getPlayer1();
         VBox vBox = new VBox(30);
 
         vBox.setAlignment(Pos.CENTER);
@@ -365,7 +371,7 @@ public class CreateContent {
 
         Label gameFinishedLb = new Label("Game Finished!");
         gameFinishedLb.setAlignment(Pos.CENTER);
-        Label whoWonLb = new Label(OxRunner.getWhoseMove().getName() + " won!");
+        Label whoWonLb = new Label(winner.getName() + " won!");
         Label boardFullLb = new Label("No more fields available");
 
         Button menuBtn = new Button("Menu");
@@ -378,6 +384,8 @@ public class CreateContent {
             vBox.getChildren().addAll(gameFinishedLb, boardFullLb, menuBtn);
         }
 
+        Rules.setGameInProgress(false);
+        InputController.addToRanking(winner, looser);
 
         currentRootPane.getChildren().add(vBox);
         stage.show();
@@ -435,6 +443,9 @@ public class CreateContent {
         Button menuBtn = new Button("Menu");
 
         menuBtn.setOnAction(event -> { showMenu(stage); currentRootPane.getChildren().remove(vBox); rootGameScene.getChildren().clear();});
+
+        Scene myScene = stage.getScene();
+        TableView statTable = (TableView) myScene.lookup("#statTable");
 
         vBox.getChildren().addAll(noGameLb, menuBtn);
         currentRootPane.getChildren().add(vBox);
